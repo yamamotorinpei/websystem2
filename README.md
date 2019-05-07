@@ -87,9 +87,6 @@ mysql>
 データベースを一覧した例を示す．上から4つはシステムが使用するデータベースであり，その下に先ほど作成した```web```が存在している．
 
 ```bash
-mysql> create database web;
-Query OK, 1 row affected (0.00 sec)
-
 mysql> show databases;
 +--------------------+
 | Database           |
@@ -126,7 +123,7 @@ remote: Compressing objects: 100% (3/3), done.
 remote: Total 6 (delta 0), reused 0 (delta 0), pack-reused 0
 Unpacking objects: 100% (6/6), done.
 ~$ cd websystem2
-~/websystem2$ sudo mysql < dump.sql
+~/websystem2$ sudo mysql < init.sql
 ~/websystem2$
 ```
 
