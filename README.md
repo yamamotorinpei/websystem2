@@ -113,6 +113,25 @@ Bye
 ~$
 ```
 
+### ここまでの設定を簡単に済ますために
+
+毎回上記の設定を行うのはタイヘンなので，ここまでの作業をバックアップしたファイルを用意した．次回からは，そのファイルをリストアすれば良い．やり方は以下のとおりです．
+
+```bash
+~$ git clone https://github.com/sudahiroshi/websystem2.git
+Cloning into 'websystem2'...
+remote: Enumerating objects: 6, done.
+remote: Counting objects: 100% (6/6), done.
+remote: Compressing objects: 100% (3/3), done.
+remote: Total 6 (delta 0), reused 0 (delta 0), pack-reused 0
+Unpacking objects: 100% (6/6), done.
+~$ cd websystem2
+~/websystem2$ sudo mysql < dump.sql
+~/websystem2$
+```
+
+
+
 
 
 
