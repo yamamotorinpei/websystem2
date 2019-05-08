@@ -1,5 +1,9 @@
 # websystem基礎実験 MySQL編
 
+今回使用するリポジトリは以下のとおりです．
+
+https://github.com/sudahiroshi/websystem2
+
 ## Paiza Cloudの起動
 
 ```新規サーバ作成```時に```Node.js```と```MySQL```をクリック（タップ）で選択しておいてください．
@@ -440,7 +444,81 @@ mysql> select id, 都道府県, 学生数/人口*100 from example order by 学�
 mysql>
 ```
 
+# node.jsからmySQLにアクセスする
 
+## パッケージのインストール
+
+node.jsでは，拡張機能をパッケージと呼び，簡単なコマンドでインストールすることができる．そのコマンドは```npm```（node.js package manager）であり，Paiza Cloudではすぐに使えるようになっている．それでは，mySQLにつなぐためのパッケージをインストールしよう．
+
+```bash
+~/websystem2$ npm install mysql
++ mysql@2.17.1
+added 11 packages from 15 contributors in 1.594s
+~/websystem2$
+```
+
+## server5の起動
+
+server5.jsを動かすと，データベースに接続してその結果をコンソールに表示する．本来はWebブラウザに返すのであるが，その前段階としてmySQLとの接続及び通信方法に注目して欲しい．
+
+server5.jsの内容は以下の通り．
+
+```javascript
+const http = require('http');
+const url = require('url');
+const server =http.createServer();
+const mysql = require('mysql');
+
+var connection = mysql.createConnection({
+    host: 'localhost',
+    port: 3306,
+    user: 'node',
+    password: 'websystem',
+    database: 'web'
+});
+
+server.on( 'request', function(req,res) {
+    
+    connection.connect( function(error) {
+        if( error) {
+            console.log('Connection Error');
+            return;
+        }
+    });
+    
+    let url_parse = url.parse(req.url,true);
+    res.writeHead( 200, {'Content-Type' : 'text/html' });
+    res.write('<!DOCTYPE html>');
+    res.write('<html lang=ja>');
+    res.write('<head><meta charset="UTF-8"></head>');
+    res.write('<body>');
+    res.write('<h1>Hello world</h1>');
+    connection.query('select id, 都道府県, 人口 from example order by 人口 desc limit 10;', function(error, rows, fields) {
+        if( error ) {
+            console.log('Query Error');
+        }
+
+        for( let i=0; i<rows.length; i++ ) {
+            console.log( "id=" + rows[i].id );
+            console.log( "都道府県=" + rows[i]['都道府県'] );
+            console.log( "人口=" + rows[i]['人口'] );
+        }
+    });
+    connection.end();
+    console.log(url_parse);
+    res.write('</body>');
+    res.write('</html>');
+    res.end();
+});
+
+server.listen(80);
+```
+
+以下のようにして実行して，Webブラウザで接続してみよう．
+
+```bash
+~/websystem2$ sudo node server5.js
+```
 
 
 
