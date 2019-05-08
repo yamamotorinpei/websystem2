@@ -1,0 +1,25 @@
+{
+  "name": "websystem",
+  "version": "1.0.0",
+  "description": "今回使用するリポジトリは以下のとおりです．",
+  "main": "server5.js",
+  "dependencies": {
+    "ejs": "^2.6.1",
+    "express": "^4.16.4",
+    "mysql": "^2.17.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sudahiroshi/websystem2.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sudahiroshi/websystem2/issues"
+  },
+  "homepage": "https://github.com/sudahiroshi/websystem2#readme"
+}

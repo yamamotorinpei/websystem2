@@ -27,18 +27,19 @@ server.on( 'request', function(req,res) {
     res.write('<head><meta charset="UTF-8"></head>');
     res.write('<body>');
     res.write('<h1>Hello world</h1>');
-    connection.query('select id, 都道府県, 人口 from example order by 人口 desc limit 10;', function(error, rows, fields) {
+    connection.query('select id, 都道府県, 人口 from example order by 人口 desc limit 10;', (error, rows, fields) => {
         if( error ) {
             console.log('Query Error');
         }
 
         for( let i=0; i<rows.length; i++ ) {
+            res.write(rows[i].id);
             console.log( "id=" + rows[i].id );
             console.log( "都道府県=" + rows[i]['都道府県'] );
             console.log( "人口=" + rows[i]['人口'] );
         }
     });
-    connection.end();
+    //connection.end();
     console.log(url_parse);
     res.write('</body>');
     res.write('</html>');

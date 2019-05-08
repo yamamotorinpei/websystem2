@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang=ja>
+<head>
+<meta charset="UTF-8">
+</head>
+<body>
+    <table>
+        <% for( let result of content ) { %>
+        <tr>
+            <td><%= result.id %></td>
+            <td><%= result['都道府県'] %></td>
+            <td><%= result['人口'] %></td>
+        </tr>
+        <% } %>
+    </table>
+ 
+</body>
+</html>

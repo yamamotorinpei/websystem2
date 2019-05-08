@@ -309,7 +309,7 @@ mysql> create table example (
  女性 int,
  大学 int,
  国立大学 int,
- 公立大学int,
+ 公立大学 int,
  私立大学 int,
  学生数 int,
  男子学生 int,
