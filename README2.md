@@ -53,13 +53,66 @@ server.listen( 80, function() {
 ```
 
 1行目でexpressを読み込んで、2行目でexpressを利用するための変数```server```を用意している。
-4～6行目で、アクセスが来たらHello worldを返すように設定し、8～10行目で、80番ポートで待ち受けをする。
+4～6行目で、「/」に対するアクセスが来たらHello worldを返すように設定し、8～10行目で、80番ポートで待ち受けをする。
 
 それでは実行してWebブラウザからアクセスしてみよう。
 
 ```bash
 ~websystem2$ sudo node server6.js
 ```
+
+ここで、4～6行目はURLとして「/」が指定された場合に、function以降を実行するという記述であり、すぐにこの部分が実行されるわけではない。
+このような仕組みをJavaScriptではコールバック関数と呼ぶ。
+
+ファイル名を指定した記述を増やすと、URLごとに異なる結果を返すことが可能となる。
+例えば、7行目に以下のプログラムを加えると、URLの末尾にmorningが付いた場合に「Good morning, world」と返す。
+
+```javascript
+server.get('/morning', function( req, res ) {
+    res.send( 'Good morning, world' );
+});
+```
+
+## テンプレートの使い方
+
+さて、前節のプログラムでExpressの基本的な使い方を理解したと思うので、一歩先に進めてテンプレートを使ってみよう。
+テンプレートとは、表示の雛形を別に用意しておいて利用する方法である。
+
+まずは簡単なテンプレートの例を示す。ここで、8行目の```<%=```から```%>```以外は、そのままWebブラウザに渡される。そして、8行目の```title```は、メインとなるプログラムから渡されたデータのうち、```title```と命名された内容が表示される。
+
+```html
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+</head>
+<body>
+
+    <h1><%=title %></h1>
+ 
+</body>
+</html>
+```
+
+上記の雛形を使うプログラム```server6-2.js```を示す。2行めでテンプレートエンジン```EJS```を使用することを宣言し、5行目で拡張子```ejs```のファイルに対して、テンプレートのフォーマットを```ejs```にしている。
+8行目で、テンプレートファイル```index.ejs```を使用し、キー```title```に文字列```Express```を代入している。この部分にはハッシュが使われている。この部分はハッシュなので、いくつでも記載可能であり、ここで付けたキー（今はtitle）がテンプレートに伝えられる。
+
+```javascript
+const express = require('express');
+const ejs = require('ejs');
+const server = express();
+
+server.set( 'ejs', ejs.renderFile );
+
+server.get('/', function( req, res ) {
+    res.render('index.ejs', {title: 'Express' });
+});
+
+server.listen( 80, () => {
+    console.log( 'listening on port 80' );
+});
+```
+
 
 ## MySQLの初期設定
 
