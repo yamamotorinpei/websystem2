@@ -12,11 +12,15 @@ var connection = mysql.createConnection({
 });
 
 server.get('/', function( req, res ) {
-    connection.query('select id, 都道府県, 人口 from example order by 人口 desc limit 10;', (error, rows, fields) => {
+    let sorting = req.query.sorting || '人口';
+    let number = req.query.number || 10;
+    let query = 'select id, 都道府県, ' + sorting + ' from example order by ' + sorting + ' desc limit ' + number + ';';
+    console.log( query );
+    connection.query( query, (error, rows, fields) => {
         if( error ) {
             console.log('Query Error');
         }
-        res.render( 'sql.ejs', { content: rows });
+        res.render( 'sql2.ejs', { content: rows });
     });
 });
 

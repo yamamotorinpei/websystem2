@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang=ja>
+<head>
+<meta charset="UTF-8">
+</head>
+<body>
+    <table>
+        <% for( let result of content ) { %>
+        <tr>
+            <td><%= result.id %></td>
+            <td><%= result['都道府県'] %></td>
+            <td><%= result['人口'] %></td>
+        </tr>
+        <% } %>
+    </table>
+    <form action="/" method="get">
+        並び順：<select name="sorting">
+            <option value="人口">人口</option>
+            <option value="男性">男性</option>
+            <option value="女性">女性</option>
+        </select>
+        表示数：<input type="text" name="number" size="10">
+        <input type="submit" value="並び替える">
+    </form>
+</body>
+</html>
