@@ -169,7 +169,7 @@ Webブラウザでアクセスすると，大きめの文字で「Express」と�
 以下のようにして，テーブルをつくってください．これも前回のとおりです．
 
 ```bash
-~/websystem2$ mysql -u node -pwebsystem example
+~/websystem2$ mysql -u node -pwebsystem web
 mysql> create table example (
  id int auto_increment not null primary key,
  都道府県 varchar(100),
@@ -207,6 +207,18 @@ mysql> describe example;
 mysql>
 ```
 
+続けて，データをロードしよう．
+
+```
+mysql> load data local infile 'example.csv' into table example
+fields terminated by ',' enclosed by '"'
+(都道府県, 人口, 男性, 女性, 大学, 国立大学, 公立大学,私立大学, 学生数, 男子学生, 女子学生 );
+Query OK, 47 rows affected (0.04 sec)
+Records: 47  Deleted: 0  Skipped: 0  Warnings: 0
+
+mysql>
+```
+
 ## Express + EJS + MySQL
 
 ### パッケージのインストール
@@ -230,12 +242,11 @@ Express + EJS + MySQLという構成のプログラム```server7.js```を以下�
 -|-
 1〜4 | ライブラリのロードとexpressの初期化
 6〜12 | 接続するMySQLの情報
-14〜23 | MySQLからデータを読み込んで表示する（内訳は以下の通り）
+14〜21 | MySQLからデータを読み込んで表示する（内訳は以下の通り）
 14 | Webブラウザからアクセスが来たら，以下の関数を実行
 15 | データを取得するSQL文
-17〜19 | エラー処理
-20 | テンプレートファイルとして```sql.ejs```を使用する．取得したデータは変数rowsに入っている．
-22 | MySQLとの接続を終わる
+16〜18 | エラー処理
+19 | テンプレートファイルとして```sql.ejs```を使用する．取得したデータは変数rowsに入っている．
 
 ```javascript
 const express = require('express');
@@ -252,20 +263,17 @@ var connection = mysql.createConnection({
 });
 
 server.get('/', function( req, res ) {
-    connection.query('select id, 都道府県, 人口 from example order by 人口 desc limit 10;',
-    (error, rows, fields) => {
+    connection.query('select id, 都道府県, 人口 from example order by 人口 desc limit 10;', (error, rows, fields) => {
         if( error ) {
             console.log('Query Error');
         }
         res.render( 'sql.ejs', { content: rows });
     });
-    connection.end();
 });
 
 server.listen( 80, function() {
     console.log( 'listening on port 80' );
 });
-
 ```
 
 なお，テンプレート```sql.ejs```は以下の通り．
@@ -299,6 +307,86 @@ server.listen( 80, function() {
 ```bash
 ~/websystem2$ sudo node server7.js
 ```
+
+県ごとの人口が多い順に10個の都道府県が表示される．
+
+## パラメータの取得
+
+現在の```server7.js```では，静的なページと変わらない．
+ここでは，表示する都道府県数と人口区分をWebページから指定できるようにする．
+
+指定できるようにするためには，いくつかやりかたがあるが，ここでは```sql.ejs```を変更して，```form```を追加する方法を取る．
+
+これを考慮したテンプレート```sql2.ejs'''を以下に示す．
+
+```html
+<!DOCTYPE html>
+<html lang=ja>
+<head>
+<meta charset="UTF-8">
+</head>
+<body>
+    <table>
+        <% for( let result of content ) { %>
+        <tr>
+            <td><%= result.id %></td>
+            <td><%= result['都道府県'] %></td>
+            <td><%= result['人口'] %></td>
+        </tr>
+        <% } %>
+    </table>
+    <form action="/" method="get">
+        並び順：<select name="sorting">
+            <option value="人口">人口</option>
+            <option value="男性">男性</option>
+            <option value="女性">女性</option>
+        </select>
+        表示数：<input type="text" name="number" size="10">
+        <input type="submit" value="並び替える">
+    </form>
+</body>
+</html>
+```
+
+続いて，上記のテンプレートに合わせたサーバプログラム```server8.js```を以下に示す．
+発行したSQLをコンソールに表示するべく，server7.jsと少しだけ構造を変えている．
+変更された行を以下に示す．
+
+
+
+```javascript
+const express = require('express');
+const server = express();
+const ejs = require('ejs');
+const mysql = require('mysql');
+
+var connection = mysql.createConnection({
+    host: 'localhost',
+    port: 3306,
+    user: 'node',
+    password: 'websystem',
+    database: 'web'
+});
+
+server.get('/', function( req, res ) {
+    let sorting = req.query.sorting || '人口';
+    let number = req.query.number || 10;
+    let query = 'select id, 都道府県, ' + sorting + ' from example order by ' + sorting + ' desc limit ' + number + ';';
+    console.log( query );
+    connection.query( query, (error, rows, fields) => {
+        if( error ) {
+            console.log('Query Error');
+        }
+        res.render( 'sql2.ejs', { content: rows });
+    });
+});
+
+server.listen( 80, function() {
+    console.log( 'listening on port 80' );
+});
+
+```
+
 
 
 
