@@ -7,9 +7,10 @@
     <table>
         <% for( let result of content ) { %>
         <tr>
-            <td><%= result.batting.id %></td>
+            <td><%= result %></td>
             <td><%= result.batting.year %></td>
-            <td><%= result['population'] %></td>
+            <td><%= result.batting.HR %></td>
+            <td><%= result.batting.name %></td>
         </tr>
         <% } %>
     </table>
