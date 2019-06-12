@@ -11,7 +11,33 @@ var connection = mysql.createConnection({
     database: 'web'
 });
 
-server.get('/players_create', function( req, res ) {
+server.get('/players', function( req, res ) {
+    let name= req.query.person || '';
+    if(name.length !=0){
+    let query = "select * from player;";
+    console.log( query );
+    connection.query( query, (error, rows, fields) => {
+        if( error ) {
+            console.log('Query Error');
+        }
+        res.render( 'players.ejs', { content: rows });
+    });
+    };
+    
+    server.get('/taem', function( req, res ) {
+    let name= req.query.person || '';
+    if(name.length !=0){
+    let query = "insert into taem (name) values ('"+name+"');"
+    console.log( query );
+    connection.query( query, (error, rows, fields) => {
+        if( error ) {
+            console.log('Query Error');
+        }
+        res.render( 'players.ejs', { content: rows });
+    });
+    };
+        
+        server.get('/batting', function( req, res ) {
     let name= req.query.number || '';
     if(name.length !=0){
     let query = "insert into players (name) values ('"+name+"');"
