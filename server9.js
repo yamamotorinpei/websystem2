@@ -21,7 +21,7 @@ server.get('/players', function( req, res ) {
         }
         res.render( 'players.ejs', { content: rows });
     });
-}
+});
    /* 
     server.get('/taem', function( req, res ) {
     let name= req.query.person || '';
