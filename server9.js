@@ -12,8 +12,7 @@ var connection = mysql.createConnection({
 });
 
 server.get('/players', function( req, res ) {
-    let name= req.query.person || '';
-    if(name.length !=0){
+
     let query = "select * from player;";
     console.log( query );
     connection.query( query, (error, rows, fields) => {
@@ -22,8 +21,8 @@ server.get('/players', function( req, res ) {
         }
         res.render( 'players.ejs', { content: rows });
     });
-    };
-    
+}
+   /* 
     server.get('/taem', function( req, res ) {
     let name= req.query.person || '';
     if(name.length !=0){
@@ -50,7 +49,7 @@ server.get('/players', function( req, res ) {
     });
     };
 });
-
+*/
 
 
 server.listen( 80, function() {
