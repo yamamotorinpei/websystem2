@@ -12,7 +12,7 @@ var connection = mysql.createConnection({
 });
 
 server.get('/players_create', function( req, res ) {
-    let name= req.query.number || ";
+    let name= req.query.number || '';
     if(name.length !=0){
     let query = "insert into players (name) values ('"+name+"');"
     console.log( query );
