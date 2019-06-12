@@ -11,8 +11,10 @@ var connection = mysql.createConnection({
     database: 'web'
 });
 
-server.get('/player/', function( req, res ) {
-    let query = 'select batting.id,batting.year,batting.HR,player.name form batting inner join player on batting.player_id=player.id limit 10;';
+server.get('/players_create', function( req, res ) {
+    let name= req.query.number || ";
+    if(name.length !=0){
+    let query = "insert into players (name) values ('"+name+"');"
     console.log( query );
     connection.query( query, (error, rows, fields) => {
         if( error ) {
@@ -20,6 +22,7 @@ server.get('/player/', function( req, res ) {
         }
         res.render( 'players.ejs', { content: rows });
     });
+    };
 });
 
 
